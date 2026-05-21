@@ -1,0 +1,23 @@
+# 虚拟环境
+.venv/
+venv/
+.env/
+
+# 数据库
+rag_milvus_demo.db/
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Streamlit 缓存
+.streamlit/
+
+# 日志
+*.log
+
+# 操作系统
+.DS_Store
+Thumbs.db
