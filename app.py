@@ -26,8 +26,8 @@ for key, default in [
     if key not in st.session_state:
         st.session_state[key] = default
 
-st.set_page_config(page_title="优化 RAG 架构演示", layout="wide")
-st.title("🚀 工业级优化 RAG vs 基础 RAG (制度问答优化版)")
+st.set_page_config(page_title="RAG 架构对比演示", layout="wide")
+st.title("🚀 混合检索 RAG：基础版 vs 优化版")
 
 with st.sidebar:
     st.header("📁 第一步：构建知识库")
@@ -51,7 +51,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.header("🔀 第二步：切换 RAG 模式")
-    rag_mode = st.radio("选择体验模式：", ["🗑️ 基础 RAG", "💎 优化 RAG (制度特化版)"], index=1)
+    rag_mode = st.radio("选择检索模式：", ["🗑️ 基础 RAG", "💎 优化 RAG"], index=1)
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):

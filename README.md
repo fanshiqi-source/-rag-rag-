@@ -1,14 +1,14 @@
-# NBRAG – 工业级优化 RAG 制度问答系统
+# NBRAG – 混合检索 RAG 系统
 
-基于 Streamlit 的双模式 RAG（检索增强生成）演示系统，支持基础 RAG 与优化 RAG 对比。
+基于 Streamlit 的双模式 RAG（检索增强生成）系统，支持基础 RAG 与优化 RAG 对比，集成稠密向量检索、BM25 稀疏检索与重排序的混合检索流水线。
 
 ## 功能特性
 
-- **双模式对比**：基础 RAG vs 优化 RAG，直观对比检索与生成质量
-- **复杂问题拆分**：自动将多条件问题拆解为独立子问题分别检索
-- **混合检索**：稠密向量 + BM25 稀疏检索 + RRF 融合 + 重排序
-- **反幻觉机制**：Self-RAG 路由 + CRAG 回退，拦截无依据的推测输出
-- **模块化设计**：config / llm_client / chunking / indexing / retrieval / pipeline 六大模块
+- **双模式对比**：基础 RAG vs 优化 RAG，支持检索质量与生成结果直观对比
+- **查询分解**：自动将多条件复杂问题拆解为独立子问题分别检索
+- **混合检索**：稠密向量检索 + BM25 稀疏检索 + RRF 融合 + 重排序
+- **事实一致性保障**：Self-RAG 路由 + CRAG 回退机制，抑制无依据生成
+- **模块化设计**：config / llm_client / chunking / indexing / retrieval / pipeline 六大独立模块
 
 ## 快速开始
 
