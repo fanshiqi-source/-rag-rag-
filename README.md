@@ -1,163 +1,98 @@
-# 🚀 工业级优化 RAG 系统
+# NBRAG – 工业级优化 RAG 制度问答系统
 
-一个面向企业级文档问答场景的检索增强生成（RAG）系统，通过多项优化策略显著提升问答准确性和可靠性。
+基于 Streamlit 的双模式 RAG（检索增强生成）演示系统，支持基础 RAG 与优化 RAG 对比。
 
----
+## 功能特性
 
-## 📋 项目概览
+- **双模式对比**：基础 RAG vs 优化 RAG，直观对比检索与生成质量
+- **复杂问题拆分**：自动将多条件问题拆解为独立子问题分别检索
+- **混合检索**：稠密向量 + BM25 稀疏检索 + RRF 融合 + 重排序
+- **反幻觉机制**：Self-RAG 路由 + CRAG 回退，拦截无依据的推测输出
+- **模块化设计**：config / llm_client / chunking / indexing / retrieval / pipeline 六大模块
 
-本项目实现了**基础 RAG** 与**优化 RAG** 的对比演示，重点解决企业制度文档、财务报告等专业文本的精准问答需求。
+## 快速开始
 
-| 特性 | 基础 RAG | 优化 RAG |
-|------|---------|---------|
-| 检索方式 | 单一向量检索 | 稠密+稀疏双路检索 |
-| 查询优化 | 无 | 智能问题拆解 |
-| 结果重排序 | 无 | BGE-Reranker |
-| 多跳推理 | 弱 | 子问题独立检索 |
-| 幻觉控制 | 无 | CRAG 机制 |
-| 平均准确率 | 50% | 95.3% |
+### 前置条件
 
----
-
-## 🛠️ 技术栈
-
-- **框架**: Streamlit 1.x
-- **向量数据库**: Milvus Lite（嵌入式，无需 Docker）
-- **嵌入模型**: BAAI/bge-m3（1024 维）
-- **重排序模型**: BAAI/bge-reranker-v2-m3
-- **大语言模型**: Qwen/Qwen2.5-72B-Instruct
-- **API 服务**: 硅基流动（SiliconFlow）
-
----
-
-## ✨ 核心优化策略
-
-### 1. 查询优化（Query Decomposition）
-- 自动拆解复杂问题为子问题
-- 每个子问题独立检索，避免信息丢失
-
-### 2. 多路召回（Hybrid Retrieval）
-- **稠密检索**: 向量相似度匹配
-- **稀疏检索**: BM25 关键词匹配
-- **RRF 融合**: Reciprocal Rank Fusion 融合结果
-
-### 3. 重排序优化（Reranking）
-- 使用 BGE-Reranker 精排序
-- 基于语义相关性重新排序结果
-
-### 4. 上下文压缩（Context Compression）
-- 阈值过滤低相关度文档
-- 每个子问题强制保留 Top-K 证据
-
-### 5. 幻觉控制（CRAG）
-- 检测文档信息充足性
-- 信息不足时触发回退机制
-
----
-
-## 🚀 快速开始
-
-### 环境要求
 - Python 3.10+
-- 虚拟环境（推荐）
+- SiliconFlow API Key（[前往申请](https://cloud.siliconflow.cn)）
 
-### 安装依赖
+### 安装
 
 ```bash
-# 创建虚拟环境
-python -m venv .venv
-.venv\Scripts\activate  # Windows
+# 1. 克隆仓库
+git clone https://github.com/fanshiqi-source/-rag-rag-.git
+cd -rag-rag-
 
-# 安装依赖
+# 2. 创建虚拟环境
+python -m venv .venv
+
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+source .venv/bin/activate
+
+# 3. 安装依赖
 pip install -r requirements.txt
+pip install -r requirements-dev.txt  # 开发依赖（测试、代码检查）
+
+# 4. 安装项目包
+pip install -e .
 ```
 
 ### 配置 API Key
 
-在 `app.py` 中配置硅基流动 API Key：
+```bash
+# 方式一：环境变量（推荐）
+export SILICON_API_KEY=your-api-key-here
 
-```python
-SILICON_API_KEY = "your-api-key-here"
+# 方式二：.env 文件（从模板创建）
+cp .env.example .env
+# 编辑 .env 填入真实 Key
 ```
 
-### 启动应用
+### 运行
 
 ```bash
 streamlit run app.py
 ```
 
-访问 `http://localhost:8501` 即可使用。
-
----
-
-## 📊 使用流程
-
-1. **上传文档**: 在侧边栏上传 TXT 格式的文档
-2. **配置分块参数**: 根据文档类型调整 Chunk Size 和 Overlap
-3. **构建知识库**: 点击"处理并存入向量库"按钮
-4. **选择模式**: 切换基础 RAG 或优化 RAG
-5. **开始问答**: 在聊天框输入问题
-
----
-
-## 📈 效果对比
-
-详细的效果对比分析请参考 [对比报告](对比.md)，包含：
-
-- 三套业务场景的问答对比
-- 量化评分分析（平均提升 45.3 分）
-- 核心差异分析
-- 不同知识类型的参数优化建议
-
----
-
-## 📁 项目结构
+## 项目结构
 
 ```
 .
-├── app.py                 # 主应用代码
-├── README.md              # 项目说明文档
-├── 对比.md               # 详细效果对比报告
-├── requirements.txt       # 依赖清单
-└── rag_milvus_demo.db/    # Milvus Lite 数据库（运行后自动生成）
+├── .github/workflows/ci.yml    # GitHub Actions CI
+├── .streamlit/
+│   └── secrets.toml             # 密钥文件（已 gitignore）
+├── src/nbrag/
+│   ├── config.py                # 配置管理
+│   ├── llm_client.py            # LLM/Embedding/Rerank API 封装（重试+超时）
+│   ├── chunking.py              # 文本切块 + 中文分词
+│   ├── indexing.py              # 向量库 + BM25 索引构建
+│   ├── retrieval.py             # 基础检索 + RRF 融合
+│   └── pipeline.py              # 高级 RAG 流水线
+├── tests/                       # 单元测试
+├── app.py                       # Streamlit UI
+├── requirements.txt             # 生产依赖
+├── requirements-dev.txt         # 开发依赖
+└── pyproject.toml               # 项目元数据
 ```
 
----
+## 运行测试
 
-## 🎯 分块参数建议
+```bash
+pytest -v
+```
 
-根据不同知识类型推荐最优参数：
+## CI
 
-| 知识类型 | Chunk Size | Chunk Overlap | 典型场景 |
-|---------|-----------|---------------|---------|
-| 结构化知识 | 400-600 | 50-100 | API文档、技术手册 |
-| 叙事性知识 | 600-800 | 100-150 | 产品白皮书、案例分析 |
-| 学术论文 | 800-1200 | 150-200 | 研究论文、行业分析 |
-| 法律合同 | 500-700 | 100-150 | 合同、法规文件 |
-| 代码配置 | 300-500 | 30-80 | 源码、配置文件 |
+项目包含 GitHub Actions CI 配置（`.github/workflows/ci.yml`），每次 push 自动执行：
 
----
+- Ruff 代码规范检查
+- Pytest 单元测试
 
-## 📝 核心代码模块
+## 致谢
 
-- **向量检索**: `milvus_client.search()` - 稠密向量检索
-- **关键词检索**: `bm25_model.get_scores()` - BM25 稀疏检索
-- **查询拆解**: `advanced_rag_pipeline()` - 复杂问题拆解
-- **RRF 融合**: `rrf_fusion()` - 结果融合算法
-- **重排序**: `get_rerank_scores()` - BGE-Reranker 调用
-
----
-
-## 📄 许可证
-
-MIT License
-
----
-
-## 📮 联系方式
-
-如有问题或建议，欢迎交流！
-
----
-
-*项目已通过严格的效果对比验证，优化后系统在制度问答场景下准确率提升 **90.6%**（从 50 分到 95.3 分）。*
+- [SiliconFlow](https://siliconflow.cn) 提供 LLM / Embedding / Rerank API
+- [Milvus Lite](https://milvus.io) 本地向量数据库
+- [Streamlit](https://streamlit.io) 交互式 UI 框架

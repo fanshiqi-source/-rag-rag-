@@ -1,0 +1,17 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Ruff check
+        run: ruff check src/ app.py
+      - name: Pytest
+        env:
+          SILICON_API_KEY: dummy-key-for-ci
+        run: python -m pytest -q

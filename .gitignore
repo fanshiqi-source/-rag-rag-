@@ -1,23 +1,10 @@
-# 虚拟环境
-.venv/
-venv/
-.env/
-
-# 数据库
+.streamlit/secrets.toml
+.env
+*.db
 rag_milvus_demo.db/
-
-# Python 缓存
 __pycache__/
+.venv/
 *.pyc
-*.pyo
-*.pyd
-
-# Streamlit 缓存
-.streamlit/
-
-# 日志
-*.log
-
-# 操作系统
-.DS_Store
-Thumbs.db
+.pytest_cache/
+运行.txt
+*.egg-info/
